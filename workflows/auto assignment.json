@@ -1,0 +1,456 @@
+{
+  "name": "auto assignment",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        528,
+        -112
+      ],
+      "id": "2c7ba7fa-d62f-4f43-bfd6-866af20d976d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        784,
+        48
+      ],
+      "id": "d8b4dad3-a8a5-4106-b8c5-5060cbf44be3",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "auto-assignment",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "18eb1c5b-aaae-415d-8491-1b7ef77d1349",
+      "name": "Webhook",
+      "webhookId": "6eee059c-db8e-4da3-919e-13e9ab057351"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2144,
+        64
+      ],
+      "id": "88311544-b837-4e99-bb06-2f564a42790a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "url": "https://gist.githubusercontent.com/pavelresh1-cpu/322d1a889d82ba96cfb96c4d2698900c/raw/ce483153f5fbdf9856f24218ca15b76810a5447b/shedule.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        176,
+        -256
+      ],
+      "id": "7ab5c23a-7bd9-4d66-9da9-7cd1875c7be8",
+      "name": "operator schedule"
+    },
+    {
+      "parameters": {
+        "url": "https://gist.githubusercontent.com/pavelresh1-cpu/1c3580f37022e0f0866ec03f97674e0f/raw/7b50b7034f722ebfa1ea4c15c15a1997ba007911/agents.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        -32
+      ],
+      "id": "ff4ff68a-6077-40cd-b613-721c00677db1",
+      "name": "operator workload",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "url": "https://gist.githubusercontent.com/pavelresh1-cpu/9b4f2b22468b78e76876457964da172d/raw/7494279510c109f63864fad4c2019795c92fe287/tickets.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        336,
+        240
+      ],
+      "id": "7d431839-da47-4bc7-8cf6-cb0b69c7d292",
+      "name": "new tickets"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.data;\n\nreturn [\n  {\n    json: JSON.parse(raw)\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        -256
+      ],
+      "id": "e0fbbb71-55b8-41e6-8e08-0077eeb3aa09",
+      "name": "Data to json"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.data;\n\nreturn [\n  {\n    json: JSON.parse(raw)\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        112
+      ],
+      "id": "02173ae7-c4b1-4eab-b92b-3c360e3e7de4",
+      "name": "Data to json1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.data;\n\nreturn [\n  {\n    json: JSON.parse(raw)\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        240
+      ],
+      "id": "109b3ffb-f5f3-4801-a5e8-f3e37ac57040",
+      "name": "Data to json2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/mock-crm/assign",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"ticket_id\": {{ $json.ticket_id }},\n  \"assigned_to\": \"{{ $json.assigned_to }}\",\n  \"queue\": \"{{ $json.queue }}\",\n  \"priority\": \"{{ $json.priority }}\",\n  \"assignment_reason\": \"{{ $json.assignment_reason }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1408,
+        48
+      ],
+      "id": "abc5b1b0-0625-4cb7-a871-9a4ed1b380ab",
+      "name": "assigne"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nconst tickets = data.tickets || [];\nconst agents = data.agents || [];\nconst schedules = data.schedules || [];\n\nconst now = new Date();\n\nconst currentHour = now.getHours();\nconst currentDay = now.getDay() === 0 ? 7 : now.getDay(); // 1=Mon ... 7=Sun\n\nfunction getSchedule(agent) {\n  return schedules.find(\n    schedule => schedule.schedule_id === agent.schedule_id\n  );\n}\n\nfunction isAgentWorking(agent) {\n  const schedule = getSchedule(agent);\n\n  if (!schedule) {\n    return false;\n  }\n\n  // 5/2\n  if (schedule.type === \"5/2\") {\n    return (\n      schedule.work_days.includes(currentDay) &&\n      currentHour >= schedule.start_hour &&\n      currentHour < schedule.end_hour\n    );\n  }\n\n  // 2/2\n  if (schedule.type.startsWith(\"2/2\")) {\n    const startDate = new Date(`${schedule.pattern_start}T00:00:00`);\n\n    const diffDays = Math.floor(\n      (now - startDate) / (1000 * 60 * 60 * 24)\n    );\n\n    const cycleDay = ((diffDays % 4) + 4) % 4;\n    const isWorkingDay = cycleDay < schedule.work_days_count;\n\n    if (!isWorkingDay) {\n      return false;\n    }\n\n    // day shift\n    if (schedule.start_hour < schedule.end_hour) {\n      return (\n        currentHour >= schedule.start_hour &&\n        currentHour < schedule.end_hour\n      );\n    }\n\n    // night shift across midnight\n    return (\n      currentHour >= schedule.start_hour ||\n      currentHour < schedule.end_hour\n    );\n  }\n\n  return false;\n}\n\nfunction hasCapacity(agent) {\n  const schedule = getSchedule(agent);\n\n  if (!schedule) {\n    return false;\n  }\n\n  const maxActiveTickets = schedule.max_active_tickets ?? Infinity;\n\n  return agent.active_tickets < maxActiveTickets;\n}\n\nconst result = tickets.map(ticket => {\n  const availableAgents = agents\n    .filter(agent => agent.skills.includes(ticket.queue))\n    .filter(agent => isAgentWorking(agent))\n    .filter(agent => hasCapacity(agent))\n    .sort((a, b) => a.active_tickets - b.active_tickets);\n\n  const assignedAgent = availableAgents.length > 0\n    ? availableAgents[0]\n    : null;\n\n  const assignedSchedule = assignedAgent\n    ? getSchedule(assignedAgent)\n    : null;\n\n  const activeTicketsBefore = assignedAgent\n    ? assignedAgent.active_tickets\n    : null;\n\n  if (assignedAgent) {\n    assignedAgent.active_tickets += 1;\n  }\n\n  return {\n    json: {\n      ticket_id: ticket.id,\n      topic: ticket.topic,\n      queue: ticket.queue,\n      priority: ticket.priority,\n\n      assigned_to: assignedAgent ? assignedAgent.login : null,\n\n      schedule_id: assignedSchedule ? assignedSchedule.schedule_id : null,\n      schedule_type: assignedSchedule ? assignedSchedule.type : null,\n      max_active_tickets: assignedSchedule\n        ? assignedSchedule.max_active_tickets\n        : null,\n\n      active_tickets_before: activeTicketsBefore,\n      active_tickets_after: assignedAgent\n        ? assignedAgent.active_tickets\n        : null,\n\n      assignment_reason: assignedAgent\n        ? \"matched by skills + schedule + capacity + current load\"\n        : \"no available agent\"\n    }\n  };\n});\n\n\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        48
+      ],
+      "id": "59956d24-c373-424e-9442-4ca1412dc18e",
+      "name": "main"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/mock-crm/fallback",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"ticket_id\": \"{{ $json.ticket_id }}\",\n  \"queue\": \"{{ $json.queue }}\",\n  \"priority\": \"{{ $json.priority }}\",\n  \"fallback_reason\": \"{{ $json.assignment_reason }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1440,
+        288
+      ],
+      "id": "12d5335d-d118-4f10-be19-e54880ecdaa4",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1680,
+        64
+      ],
+      "id": "7bbd8b2f-f9a8-4473-a2a3-d14eed5f07d9",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "96a7729e-5964-4da7-8ab7-3e79d7586e7b",
+              "leftValue": "={{ $json.assigned_to != null }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1152,
+        112
+      ],
+      "id": "693c56c2-2c11-4e35-a3b4-5b804dd65c61",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const data = item.json;\n\n  return {\n    json: {\n      logged_at: new Date().toISOString(),\n      action: data.message,\n      ok: data.ok,\n      ticket_id: data.received?.ticket_id,\n      assigned_to: data.received?.assigned_to || null,\n      queue: data.received?.queue,\n      priority: data.received?.priority,\n      reason:\n        data.received?.assignment_reason ||\n        data.received?.fallback_reason ||\n        null,\n      raw_response: data\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        64
+      ],
+      "id": "19d2d68c-8b85-42e7-878d-c99823054a3b",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "main",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "operator workload",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "operator schedule",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "new tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "operator schedule": {
+      "main": [
+        [
+          {
+            "node": "Data to json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "operator workload": {
+      "main": [
+        [
+          {
+            "node": "Data to json1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "new tickets": {
+      "main": [
+        [
+          {
+            "node": "Data to json2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data to json": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data to json1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Data to json2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "assigne": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "main": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "assigne",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "44437878-bae9-49cd-a3d9-63abc76a12ce",
+  "meta": {
+    "instanceId": "b270ddadbbd20edbacb4a7c87f35f805f2e41d5b6b457528215170ab2d01cbd0"
+  },
+  "id": "Qjoyu7xTbgTsQNFd",
+  "tags": []
+}
