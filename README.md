@@ -1,8 +1,6 @@
-:::writing{variant=“standard” id=“48271”}
+# Ticket Auto-Assignment Workflow (n8n)
 
-Ticket Auto-Assignment Workflow (n8n)
-
-Overview
+## Overview
 
 This project is a self-hosted ticket auto-assignment workflow built with n8n.
 
@@ -10,39 +8,41 @@ The workflow receives incoming support tickets through a webhook API, loads oper
 
 The system also supports fallback routing and assignment logging.
 
+---
 
-⸻
+## Features
 
-Features
-	•	Webhook-based API endpoint
-	•	Automatic ticket assignment
-	•	Skill-based routing
-	•	Schedule validation
-	•	Capacity/load control
-	•	Fallback queue support
-	•	Assignment logging
-	•	External JSON data sources
-	•	Mock CRM API integration
-	•	Self-hosted n8n setup
+- Webhook-based API endpoint
+- Automatic ticket assignment
+- Skill-based routing
+- Schedule validation
+- Capacity/load control
+- Fallback queue support
+- Assignment logging
+- External JSON data sources
+- Mock CRM API integration
+- Self-hosted n8n setup
 
-⸻
+---
 
-Workflow Logic
+## Workflow Logic
 
-Assignment Rules
+### Assignment Rules
 
 Tickets are assigned using:
-	•	operator skills
-	•	work schedule availability
-	•	current active ticket count
-	•	maximum allowed ticket capacity
+
+- operator skills
+- work schedule availability
+- current active ticket count
+- maximum allowed ticket capacity
 
 If no suitable operator is available, the ticket is sent to a fallback queue.
 
-⸻
+---
 
-Architecture
+## Architecture
 
+```text
 Webhook API
     ↓
 Load external JSON data
@@ -59,16 +59,23 @@ IF assigned_to exists
 Logging
     ↓
 Webhook Response
+```
 
+---
 
-Example Request
+## Example Request
 
+```bash
 curl -X POST http://localhost:5678/webhook/auto-assignment \
 -H "Content-Type: application/json" \
 -d '{}'
+```
 
-Example Response
+---
 
+## Example Response
+
+```json
 [
   {
     "ok": true,
@@ -90,40 +97,38 @@ Example Response
     }
   }
 ]
+```
 
+---
 
-⸻
+## Technologies Used
 
-Technologies Used
-	•	n8n
-	•	Docker
-	•	Webhooks
-	•	REST API
-	•	JSON
-	•	HTTP Request nodes
-	•	JavaScript Code nodes
+- n8n
+- Docker
+- Webhooks
+- REST API
+- JSON
+- HTTP Request nodes
+- JavaScript Code nodes
 
-⸻
+---
 
-Use Cases
-	•	Support team automation
-	•	Helpdesk ticket routing
-	•	CRM workflow orchestration
-	•	Internal operations tooling
-	•	Queue balancing systems
+## Use Cases
 
-⸻
+- Support team automation
+- Helpdesk ticket routing
+- CRM workflow orchestration
+- Internal operations tooling
+- Queue balancing systems
 
-Future Improvements
-	•	Database integration
-	•	Retry logic
-	•	SLA-based prioritization
-	•	Real CRM integrations
-	•	Persistent logging
-	•	Operator status API
-	•	Metrics dashboard
+---
 
+## Future Improvements
 
-:::
-
-
+- Database integration
+- Retry logic
+- SLA-based prioritization
+- Real CRM integrations
+- Persistent logging
+- Operator status API
+- Metrics dashboard
