@@ -1,0 +1,86 @@
+{
+  "name": "Mock CRM Assign API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mock-crm/assign",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4500b5c9-9fbd-442e-9aa9-c7166adc0c9c",
+      "name": "Webhook",
+      "webhookId": "49040ce9-91b4-4370-aec9-0cd3334441bf"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b3946439-6000-4474-9de8-1c8953ace707",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\n\nreturn [\n  {\n    json: {\n      ok: true,\n      message: \"ticket assigned\",\n      received: input.body\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "df63959f-5612-4fb7-b719-7324ad1c7107",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b0e0728a-f13b-4d1d-96c0-f137a791c240",
+  "meta": {
+    "instanceId": "b270ddadbbd20edbacb4a7c87f35f805f2e41d5b6b457528215170ab2d01cbd0"
+  },
+  "id": "hkUTRaiBXCvl4YDW",
+  "tags": []
+}
