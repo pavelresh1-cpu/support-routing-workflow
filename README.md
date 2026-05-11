@@ -132,3 +132,5 @@ curl -X POST http://localhost:5678/webhook/auto-assignment \
 - Persistent logging
 - Operator status API
 - Metrics dashboard
+
+![Workflow Screenshot](auto-assignment.png)
